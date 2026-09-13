@@ -154,31 +154,44 @@
   }
   .bench-empty{font-size:13.5px;color:var(--ink-soft);font-style:italic;}
   .tally-note{font-size:12.5px;color:var(--ink-soft);margin:0 0 10px;}
-  .tally{display:flex;flex-direction:column;gap:0;}
-  .tally-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
+  .tally-table{width:100%;border-collapse:collapse;}
+  .tally-table th{
+    font-family:'Teko',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0.3px;
+    color:var(--ink-soft);
+    text-align:center;
+    padding:0 0 6px;
+    border-bottom:1.5px solid var(--ink);
+  }
+  .tally-table th:first-child{text-align:left;}
+  .tally-table td{
     padding:8px 0;
     border-bottom:1px solid var(--line);
+    text-align:center;
+    font-size:13.5px;
   }
-  .tally-row:last-child{border-bottom:none;}
-  .tally-name{font-size:14px;font-weight:500;color:var(--ink);}
+  .tally-table tr:last-child td{border-bottom:none;}
+  .tally-table td.tally-name{
+    text-align:left;
+    font-weight:500;
+    color:var(--ink);
+  }
   .tally-count{
     font-family:'Teko',sans-serif;
-    font-size:18px;
+    font-size:17px;
     font-weight:600;
     color:var(--ink-soft);
     background:var(--chalk);
     border:1px solid var(--line);
     border-radius:999px;
-    min-width:34px;
-    text-align:center;
+    min-width:30px;
+    display:inline-block;
     padding:1px 0;
   }
   .tally-count.high{color:var(--coral-dark);border-color:var(--coral);background:rgba(228,87,61,0.08);}
-  .tally-count.zero{color:var(--ink-soft);opacity:0.6;}
+  .tally-count.zero{color:var(--ink-soft);opacity:0.5;}
   .modal-overlay{
     position:fixed;inset:0;background:rgba(30,43,30,0.45);
     display:none;align-items:center;justify-content:center;padding:20px;z-index:10;
@@ -208,6 +221,12 @@
     .print-pos-name.print-empty{font-style:italic;font-weight:500;color:var(--ink-soft);border-color:var(--line);}
     .print-bench-wrap{margin-top:16px;font-size:13px;color:var(--ink);}
     .print-bench-label{font-weight:700;margin-right:6px;}
+    .print-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+    .print-table th, .print-table td{border:1px solid var(--ink);padding:7px 4px;text-align:center;font-family:'Inter',sans-serif;font-size:11.5px;color:var(--ink);}
+    .print-table thead th{background:var(--ink);color:var(--chalk);font-family:'Teko',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.3px;padding:8px 4px;}
+    .print-table td.inning-cell{font-family:'Teko',sans-serif;font-weight:600;font-size:16px;background:var(--chalk);}
+    .print-table td.empty-cell{color:var(--ink-soft);font-style:italic;}
+    .print-table td.bench-cell{text-align:left;font-size:10px;padding:7px 6px;}
   }
 </style>
 </head>
@@ -228,6 +247,7 @@
     <button class="btn danger" id="clearInningBtn">Clear this inning</button>
     <button class="btn" id="clearAllBtn">Clear all innings</button>
     <button class="btn primary" id="printBtn">Print all 6 innings</button>
+    <button class="btn primary" id="printTableBtn">Print table view</button>
   </div>
 
   <div class="field-card">
@@ -249,332 +269,12 @@
 
       <div class="field-pos" id="fp-C" style="left:50%;top:96%;">
         <span class="pos-label">C</span>
-        <select class="pos-select" id="select-C"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+        <select class="pos-select" id="select-C"><option value="">Empty</option><option value="Miles Walsh">Miles W.</option><option value="Clark Desmarais">Clark D.</option><option value="Kingston Bradley">Kingston B.</option><option value="Knox Griffin">Knox G.</option><option value="Cage Tackett">Cage T.</option><option value="Brayden Campbell">Brayden C.</option><option value="Theodore Elliott">Theodore E.</option><option value="Braden Bobo">Braden B.</option><option value="Hayes Foster">Hayes F.</option><option value="Tyson Burroughs">Tyson B.</option><option value="Reid Barnhart">Reid B.</option><option value="Talan Bliss">Talan B.</option><option value="Mack Kilpatrick">Mack K.</option><option value="James Jaremko">James J.</option></select>
       </div>
       <div class="field-pos" id="fp-P" style="left:50%;top:65.2%;">
         <span class="pos-label">P</span>
-        <select class="pos-select" id="select-P"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+        <select class="pos-select" id="select-P"><option value="">Empty</option><option value="Miles Walsh">Miles W.</option><option value="Clark Desmarais">Clark D.</option><option value="Kingston Bradley">Kingston B.</option><option value="Knox Griffin">Knox G.</option><option value="Cage Tackett">Cage T.</option><option value="Brayden Campbell">Brayden C.</option><option value="Theodore Elliott">Theodore E.</option><option value="Braden Bobo">Braden B.</option><option value="Hayes Foster">Hayes F.</option><option value="Tyson Burroughs">Tyson B.</option><option value="Reid Barnhart">Reid B.</option><option value="Talan Bliss">Talan B.</option><option value="Mack Kilpatrick">Mack K.</option><option value="James Jaremko">James J.</option></select>
       </div>
       <div class="field-pos" id="fp-1B" style="left:75.7%;top:65.2%;">
         <span class="pos-label">1B</span>
-        <select class="pos-select" id="select-1B"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-      <div class="field-pos" id="fp-2B" style="left:62.9%;top:39%;">
-        <span class="pos-label">2B</span>
-        <select class="pos-select" id="select-2B"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-      <div class="field-pos" id="fp-3B" style="left:24.3%;top:65.2%;">
-        <span class="pos-label">3B</span>
-        <select class="pos-select" id="select-3B"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-      <div class="field-pos" id="fp-SS" style="left:37.1%;top:39%;">
-        <span class="pos-label">SS</span>
-        <select class="pos-select" id="select-SS"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-      <div class="field-pos" id="fp-LF" style="left:16%;top:19%;">
-        <span class="pos-label">LF</span>
-        <select class="pos-select" id="select-LF"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-      <div class="field-pos" id="fp-CF" style="left:50%;top:8%;">
-        <span class="pos-label">CF</span>
-        <select class="pos-select" id="select-CF"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-      <div class="field-pos" id="fp-RF" style="left:84%;top:19%;">
-        <span class="pos-label">RF</span>
-        <select class="pos-select" id="select-RF"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel-title">Bench</div>
-  <div class="group"><div class="bench" id="bench"></div></div>
-
-  <div class="panel-title">Innings on bench</div>
-  <div class="group">
-    <p class="tally-note">Across all 6 innings — helps make sure everyone gets fair field time.</p>
-    <div class="tally" id="tally"></div>
-  </div>
-
-</div>
-
-<div class="print-all" id="printAllContainer"></div>
-
-</div>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <p id="modalText"></p>
-    <div class="modal-actions">
-      <button class="btn" id="modalCancel">Cancel</button>
-      <button class="btn danger" id="modalConfirm">Confirm</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const ROSTER = ["Miles Walsh","Clark Desmarais","Kingston Bradley","Knox Griffin","Cage Tackett","Brayden Campbell","Theodore Elliott","Braden Bobo","Hayes Foster","Tyson Burroughs","Reid Barnhart","Talan Bliss","Mack Kilpatrick","James Jaremko"];
-const POSITIONS = ["P","C","1B","2B","3B","SS","LF","CF","RF"];
-const POS_COORDS = {
-  "C":{left:50,top:96}, "P":{left:50,top:65.2}, "1B":{left:75.7,top:65.2},
-  "2B":{left:62.9,top:39}, "3B":{left:24.3,top:65.2}, "SS":{left:37.1,top:39},
-  "LF":{left:16,top:19}, "CF":{left:50,top:8}, "RF":{left:84,top:19}
-};
-const NUM_INNINGS = 6;
-const STORAGE_KEY = "party-animals-lineup-v2";
-
-let lineups = {};
-for(let i=1;i<=NUM_INNINGS;i++){
-  lineups[i] = {};
-  POSITIONS.forEach(p => lineups[i][p] = "");
-}
-let currentInning = 1;
-
-function shortName(full){
-  const parts = full.split(" ");
-  return parts[0][0] + ". " + parts[parts.length-1];
-}
-
-function buildTabs(){
-  const el = document.getElementById("inningTabs");
-  el.innerHTML = "";
-  for(let i=1;i<=NUM_INNINGS;i++){
-    const b = document.createElement("button");
-    b.className = "inning-btn" + (i===currentInning ? " active" : "");
-    b.textContent = i;
-    b.addEventListener("click", () => { currentInning = i; renderAll(); });
-    el.appendChild(b);
-  }
-}
-
-function attachSelectListeners(){
-  POSITIONS.forEach(pos => {
-    const select = document.getElementById("select-" + pos);
-    select.addEventListener("change", (e) => {
-      lineups[currentInning][pos] = e.target.value;
-      saveState();
-      renderAll();
-    });
-  });
-}
-
-function renderAll(){
-  buildTabs();
-  const assignment = lineups[currentInning];
-  const takenElsewhere = pos => POSITIONS.filter(p => p !== pos).map(p => assignment[p]).filter(Boolean);
-
-  POSITIONS.forEach(pos => {
-    const select = document.getElementById("select-" + pos);
-    const currentVal = assignment[pos];
-    const taken = takenElsewhere(pos);
-    select.innerHTML = "";
-    const blank = document.createElement("option");
-    blank.value = "";
-    blank.textContent = "Empty";
-    select.appendChild(blank);
-    ROSTER.forEach(name => {
-      if(taken.includes(name)) return;
-      const opt = document.createElement("option");
-      opt.value = name;
-      opt.textContent = shortName(name);
-      if(name === currentVal) opt.selected = true;
-      select.appendChild(opt);
-    });
-    select.value = currentVal || "";
-    select.classList.toggle("empty", !currentVal);
-  });
-
-  renderTally();
-
-  const benchEl = document.getElementById("bench");
-  benchEl.innerHTML = "";
-  const onField = POSITIONS.map(p => assignment[p]).filter(Boolean);
-  const bench = ROSTER.filter(n => !onField.includes(n));
-  if(bench.length === 0){
-    const em = document.createElement("span");
-    em.className = "bench-empty";
-    em.textContent = "Everyone's in the field.";
-    benchEl.appendChild(em);
-  } else {
-    bench.forEach(name => {
-      const chip = document.createElement("span");
-      chip.className = "chip";
-      chip.textContent = name;
-      benchEl.appendChild(chip);
-    });
-  }
-}
-
-function renderTally(){
-  const counts = {};
-  ROSTER.forEach(name => counts[name] = 0);
-  for(let i=1;i<=NUM_INNINGS;i++){
-    const onField = POSITIONS.map(p => lineups[i][p]).filter(Boolean);
-    ROSTER.forEach(name => {
-      if(!onField.includes(name)) counts[name]++;
-    });
-  }
-  const sorted = [...ROSTER].sort((a,b) => counts[b] - counts[a] || a.localeCompare(b));
-  const tallyEl = document.getElementById("tally");
-  tallyEl.innerHTML = "";
-  sorted.forEach(name => {
-    const row = document.createElement("div");
-    row.className = "tally-row";
-    const nameEl = document.createElement("span");
-    nameEl.className = "tally-name";
-    nameEl.textContent = name;
-    const countEl = document.createElement("span");
-    countEl.className = "tally-count";
-    if(counts[name] === 0) countEl.classList.add("zero");
-    if(counts[name] >= 3) countEl.classList.add("high");
-    countEl.textContent = counts[name];
-    row.appendChild(nameEl);
-    row.appendChild(countEl);
-    tallyEl.appendChild(row);
-  });
-}
-
-function showModal(text, onConfirm){
-  const overlay = document.getElementById("modalOverlay");
-  document.getElementById("modalText").textContent = text;
-  overlay.classList.add("show");
-  const confirmBtn = document.getElementById("modalConfirm");
-  const cancelBtn = document.getElementById("modalCancel");
-  const cleanup = () => {
-    overlay.classList.remove("show");
-    confirmBtn.removeEventListener("click", onConfirmHandler);
-    cancelBtn.removeEventListener("click", onCancelHandler);
-  };
-  const onConfirmHandler = () => { cleanup(); onConfirm(); };
-  const onCancelHandler = () => { cleanup(); };
-  confirmBtn.addEventListener("click", onConfirmHandler);
-  cancelBtn.addEventListener("click", onCancelHandler);
-}
-
-document.getElementById("clearInningBtn").addEventListener("click", () => {
-  showModal("Clear every position for inning " + currentInning + "?", () => {
-    POSITIONS.forEach(p => lineups[currentInning][p] = "");
-    saveState();
-    renderAll();
-  });
-});
-
-document.getElementById("clearAllBtn").addEventListener("click", () => {
-  showModal("Clear all 6 innings? This can't be undone.", () => {
-    for(let i=1;i<=NUM_INNINGS;i++){
-      POSITIONS.forEach(p => lineups[i][p] = "");
-    }
-    saveState();
-    renderAll();
-  });
-});
-
-document.getElementById("copyPrevBtn").addEventListener("click", () => {
-  if(currentInning === 1) return;
-  const prev = lineups[currentInning - 1];
-  lineups[currentInning] = Object.assign({}, prev);
-  saveState();
-  renderAll();
-});
-
-function buildPrintSheets(){
-  const container = document.getElementById("printAllContainer");
-  container.innerHTML = "";
-  const svgMarkup = document.querySelector(".field-wrap svg").outerHTML;
-
-  for(let i=1;i<=NUM_INNINGS;i++){
-    const assignment = lineups[i];
-
-    const sheet = document.createElement("div");
-    sheet.className = "print-sheet";
-
-    const header = document.createElement("div");
-    header.className = "print-header";
-    header.innerHTML = `<p class="print-eyebrow">Party Animals · 9U</p><h2>Inning ${i}</h2>`;
-    sheet.appendChild(header);
-
-    const fieldWrap = document.createElement("div");
-    fieldWrap.className = "print-field-wrap";
-    fieldWrap.innerHTML = svgMarkup;
-
-    POSITIONS.forEach(pos => {
-      const coord = POS_COORDS[pos];
-      const posDiv = document.createElement("div");
-      posDiv.className = "print-pos";
-      posDiv.style.left = coord.left + "%";
-      posDiv.style.top = coord.top + "%";
-      const name = assignment[pos];
-      const nameClass = name ? "print-pos-name" : "print-pos-name print-empty";
-      posDiv.innerHTML = `<span class="print-pos-label">${pos}</span><span class="${nameClass}">${name ? shortName(name) : "—"}</span>`;
-      fieldWrap.appendChild(posDiv);
-    });
-    sheet.appendChild(fieldWrap);
-
-    const onField = POSITIONS.map(p => assignment[p]).filter(Boolean);
-    const bench = ROSTER.filter(n => !onField.includes(n));
-    const benchWrap = document.createElement("div");
-    benchWrap.className = "print-bench-wrap";
-    benchWrap.innerHTML = `<span class="print-bench-label">Bench:</span>${bench.length ? bench.join(", ") : "Everyone's in the field"}`;
-    sheet.appendChild(benchWrap);
-
-    container.appendChild(sheet);
-  }
-}
-
-document.getElementById("printBtn").addEventListener("click", () => {
-  buildPrintSheets();
-  window.print();
-});
-
-const hasClaudeStorage = typeof window.storage !== "undefined" && window.storage !== null;
-
-async function saveState(){
-  const payload = JSON.stringify({lineups, currentInning});
-  if(hasClaudeStorage){
-    try{
-      await window.storage.set(STORAGE_KEY, payload, false);
-      return;
-    }catch(err){
-      console.error("Claude storage save failed:", err);
-    }
-  }
-  try{
-    localStorage.setItem(STORAGE_KEY, payload);
-  }catch(err){
-    console.error("Local storage save failed:", err);
-  }
-}
-
-async function loadState(){
-  let raw = null;
-  if(hasClaudeStorage){
-    try{
-      const result = await window.storage.get(STORAGE_KEY, false);
-      if(result && result.value) raw = result.value;
-    }catch(err){
-      // no saved state yet in Claude storage — fine, try local fallback
-    }
-  }
-  if(!raw){
-    try{
-      raw = localStorage.getItem(STORAGE_KEY);
-    }catch(err){
-      // localStorage unavailable — fine, start fresh
-    }
-  }
-  if(raw){
-    try{
-      const parsed = JSON.parse(raw);
-      if(parsed.lineups) lineups = parsed.lineups;
-      if(parsed.currentInning) currentInning = parsed.currentInning;
-    }catch(err){
-      // corrupted saved data — start fresh
-    }
-  }
-  attachSelectListeners();
-  renderAll();
-}
-
-loadState();
-</script>
-</body>
-</html>
+        <select class="pos-select" id="select-1B"><option value="">Empty</option><option value="Miles Walsh">Miles W.</option><option value="Clark Desmarais">Clark D.</option>
