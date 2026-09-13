@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party Animals — 9U Lineup Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#1E2B1E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PA Lineup">
+<style>
+  :root{
+    --cream:#F6F1E4;
+    --card:#FFFDF7;
+    --ink:#1E2B1E;
+    --ink-soft:#4A5A46;
+    --grass-dark:#4C7A3D;
+    --grass-light:#5B8C46;
+    --dirt:#C69766;
+    --dirt-dark:#B4854F;
+    --chalk:#FBF8F1;
+    --coral:#E4573D;
+    --coral-dark:#C8432B;
+    --gold:#E8AC3E;
+    --line:#DCD3BE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    padding:20px 14px 60px;
+  }
+  .wrap{max-width:620px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  .eyebrow{font-size:13px;color:var(--ink-soft);margin:0 0 2px;}
+  h1{
+    font-family:'Teko',sans-serif;
+    font-weight:600;
+    font-size:44px;
+    letter-spacing:0.5px;
+    line-height:0.95;
+    margin:0;
+    color:var(--ink);
+  }
+  .subtitle{font-size:14px;color:var(--ink-soft);margin:4px 0 0;}
+  .innings{display:flex;gap:6px;margin:18px 0 10px;flex-wrap:wrap;}
+  .inning-btn{
+    flex:1;min-width:40px;padding:9px 0;text-align:center;border-radius:8px;
+    border:1px solid var(--line);background:var(--card);
+    font-family:'Teko',sans-serif;font-size:20px;font-weight:600;color:var(--ink);
+    cursor:pointer;transition:background .15s, color .15s, border-color .15s;
+  }
+  .inning-btn.active{background:var(--coral);border-color:var(--coral);color:var(--chalk);}
+  .toolbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .btn{
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:9px 13px;
+    border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;
+  }
+  .btn:hover{border-color:var(--ink-soft);}
+  .btn.danger{color:var(--coral-dark);}
+  .btn.primary{background:var(--ink);color:var(--chalk);border-color:var(--ink);}
+  .field-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:18px;
+  }
+  .field-wrap{
+    position:relative;
+    width:100%;
+    aspect-ratio: 700 / 660;
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .field-wrap svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .field-pos{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+  }
+  .pos-label{
+    font-family:'Teko',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.5px;
+    color:var(--chalk);
+    background:rgba(30,43,30,0.55);
+    padding:0px 6px;
+    border-radius:5px;
+    line-height:1.5;
+  }
+  .pos-select{
+    width:82px;
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    font-weight:600;
+    text-align:center;
+    padding:6px 4px;
+    border-radius:8px;
+    border:1.5px solid var(--ink);
+    background:var(--chalk);
+    color:var(--ink);
+    appearance:none;
+    -webkit-appearance:none;
+    text-overflow:ellipsis;
+    box-shadow:0 1px 3px rgba(30,43,30,0.25);
+  }
+  .pos-select.empty{
+    color:var(--ink-soft);
+    font-weight:500;
+    font-style:italic;
+    border-color:var(--line);
+    background:rgba(251,248,241,0.85);
+  }
+  .pos-select:focus{outline:2px solid var(--coral);outline-offset:1px;}
+  .panel-title{
+    font-family:'Teko',sans-serif;
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:0.3px;
+    margin:22px 0 8px;
+    color:var(--ink);
+  }
+  .group{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    margin-bottom:14px;
+  }
+  .bench{display:flex;flex-wrap:wrap;gap:7px;}
+  .chip{
+    background:var(--chalk);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 12px;
+    font-size:13.5px;
+    font-weight:500;
+  }
+  .bench-empty{font-size:13.5px;color:var(--ink-soft);font-style:italic;}
+  .tally-note{font-size:12.5px;color:var(--ink-soft);margin:0 0 10px;}
+  .tally{display:flex;flex-direction:column;gap:0;}
+  .tally-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .tally-row:last-child{border-bottom:none;}
+  .tally-name{font-size:14px;font-weight:500;color:var(--ink);}
+  .tally-count{
+    font-family:'Teko',sans-serif;
+    font-size:18px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--chalk);
+    border:1px solid var(--line);
+    border-radius:999px;
+    min-width:34px;
+    text-align:center;
+    padding:1px 0;
+  }
+  .tally-count.high{color:var(--coral-dark);border-color:var(--coral);background:rgba(228,87,61,0.08);}
+  .tally-count.zero{color:var(--ink-soft);opacity:0.6;}
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(30,43,30,0.45);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:10;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--card);border-radius:14px;padding:20px;max-width:320px;width:100%;}
+  .modal p{font-size:14.5px;margin:0 0 16px;color:var(--ink);}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+  @media (min-width: 480px){
+    .pos-select{width:98px;font-size:12.5px;padding:7px 5px;}
+    .pos-label{font-size:14px;}
+  }
+  .print-all{display:none;}
+  @media print{
+    .live-view{display:none !important;}
+    .print-all{display:block !important;}
+    body{padding:0;background:#fff;}
+    .print-sheet{padding:28px 24px;page-break-after:always;}
+    .print-sheet:last-child{page-break-after:auto;}
+    .print-eyebrow{font-size:12px;color:var(--ink-soft);margin:0 0 2px;}
+    .print-header h2{font-family:'Teko',sans-serif;font-weight:600;font-size:34px;margin:0 0 14px;color:var(--ink);}
+    .print-field-wrap{position:relative;width:100%;aspect-ratio:700/660;}
+    .print-field-wrap svg{position:absolute;inset:0;width:100%;height:100%;}
+    .print-pos{position:absolute;transform:translate(-50%,-50%);text-align:center;}
+    .print-pos-label{display:block;font-family:'Teko',sans-serif;font-size:13px;font-weight:600;color:var(--ink);}
+    .print-pos-name{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;background:var(--chalk);border:1.2px solid var(--ink);border-radius:6px;padding:2px 6px;margin-top:1px;}
+    .print-pos-name.print-empty{font-style:italic;font-weight:500;color:var(--ink-soft);border-color:var(--line);}
+    .print-bench-wrap{margin-top:16px;font-size:13px;color:var(--ink);}
+    .print-bench-label{font-weight:700;margin-right:6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="live-view">
+
+  <header>
+    <p class="eyebrow">9U · Kid Pitch</p>
+    <h1>Party Animals</h1>
+    <p class="subtitle">Lineup card — tap an inning, then tap a position to set it</p>
+  </header>
+
+  <div class="innings" id="inningTabs"></div>
+
+  <div class="toolbar">
+    <button class="btn" id="copyPrevBtn">Copy previous inning</button>
+    <button class="btn danger" id="clearInningBtn">Clear this inning</button>
+    <button class="btn" id="clearAllBtn">Clear all innings</button>
+    <button class="btn primary" id="printBtn">Print all 6 innings</button>
+  </div>
+
+  <div class="field-card">
+    <div class="field-wrap" id="fieldWrap">
+      <svg viewBox="0 0 700 660" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="700" height="660" fill="var(--grass-light)"/>
+        <path d="M0 0 L700 0 L700 70 L0 70 Z M0 140 L700 140 L700 210 L0 210 Z M0 280 L700 280 L700 350 L0 350 Z M0 420 L700 420 L700 490 L0 490 Z M0 560 L700 560 L700 630 L0 630 Z" fill="var(--grass-dark)" opacity="0.5"/>
+        <path d="M70 610 A 390 390 0 0 1 350 80 A 390 390 0 0 1 630 610 Z" fill="var(--grass-dark)" opacity="0.16"/>
+        <path d="M350 570 L 500 430 L 350 290 L 200 430 Z" fill="var(--dirt)" stroke="var(--dirt-dark)" stroke-width="2"/>
+        <circle cx="350" cy="430" r="38" fill="var(--dirt)" stroke="var(--dirt-dark)" stroke-width="2"/>
+        <rect x="341" y="421" width="18" height="18" fill="var(--chalk)" stroke="var(--dirt-dark)" stroke-width="1.5"/>
+        <rect x="480" y="420" width="22" height="22" fill="var(--chalk)" stroke="var(--dirt-dark)" stroke-width="1.5" transform="rotate(45 491 431)"/>
+        <rect x="329" y="279" width="22" height="22" fill="var(--chalk)" stroke="var(--dirt-dark)" stroke-width="1.5" transform="rotate(45 340 290)"/>
+        <rect x="189" y="420" width="22" height="22" fill="var(--chalk)" stroke="var(--dirt-dark)" stroke-width="1.5" transform="rotate(45 200 431)"/>
+        <path d="M333 568 L367 568 L367 587 L350 601 L333 587 Z" fill="var(--chalk)" stroke="var(--dirt-dark)" stroke-width="1.5"/>
+        <line x1="350" y1="570" x2="500" y2="430" stroke="var(--chalk)" stroke-width="2.5" opacity="0.85"/>
+        <line x1="350" y1="570" x2="200" y2="430" stroke="var(--chalk)" stroke-width="2.5" opacity="0.85"/>
+      </svg>
+
+      <div class="field-pos" id="fp-C" style="left:50%;top:96%;">
+        <span class="pos-label">C</span>
+        <select class="pos-select" id="select-C"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-P" style="left:50%;top:65.2%;">
+        <span class="pos-label">P</span>
+        <select class="pos-select" id="select-P"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-1B" style="left:75.7%;top:65.2%;">
+        <span class="pos-label">1B</span>
+        <select class="pos-select" id="select-1B"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-2B" style="left:62.9%;top:39%;">
+        <span class="pos-label">2B</span>
+        <select class="pos-select" id="select-2B"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-3B" style="left:24.3%;top:65.2%;">
+        <span class="pos-label">3B</span>
+        <select class="pos-select" id="select-3B"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-SS" style="left:37.1%;top:39%;">
+        <span class="pos-label">SS</span>
+        <select class="pos-select" id="select-SS"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-LF" style="left:16%;top:19%;">
+        <span class="pos-label">LF</span>
+        <select class="pos-select" id="select-LF"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-CF" style="left:50%;top:8%;">
+        <span class="pos-label">CF</span>
+        <select class="pos-select" id="select-CF"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+      <div class="field-pos" id="fp-RF" style="left:84%;top:19%;">
+        <span class="pos-label">RF</span>
+        <select class="pos-select" id="select-RF"><option value="">Empty</option><option value="Miles Walsh">M. Walsh</option><option value="Clark Desmarais">C. Desmarais</option><option value="Kingston Bradley">K. Bradley</option><option value="Knox Griffin">K. Griffin</option><option value="Cage Tackett">C. Tackett</option><option value="Brayden Campbell">B. Campbell</option><option value="Theodore Elliott">T. Elliott</option><option value="Braden Bobo">B. Bobo</option><option value="Hayes Foster">H. Foster</option><option value="Tyson Burroughs">T. Burroughs</option><option value="Reid Barnhart">R. Barnhart</option><option value="Talan Bliss">T. Bliss</option><option value="Mack Kilpatrick">M. Kilpatrick</option><option value="James Jaremko">J. Jaremko</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-title">Bench</div>
+  <div class="group"><div class="bench" id="bench"></div></div>
+
+  <div class="panel-title">Innings on bench</div>
+  <div class="group">
+    <p class="tally-note">Across all 6 innings — helps make sure everyone gets fair field time.</p>
+    <div class="tally" id="tally"></div>
+  </div>
+
+</div>
+
+<div class="print-all" id="printAllContainer"></div>
+
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <p id="modalText"></p>
+    <div class="modal-actions">
+      <button class="btn" id="modalCancel">Cancel</button>
+      <button class="btn danger" id="modalConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROSTER = ["Miles Walsh","Clark Desmarais","Kingston Bradley","Knox Griffin","Cage Tackett","Brayden Campbell","Theodore Elliott","Braden Bobo","Hayes Foster","Tyson Burroughs","Reid Barnhart","Talan Bliss","Mack Kilpatrick","James Jaremko"];
+const POSITIONS = ["P","C","1B","2B","3B","SS","LF","CF","RF"];
+const POS_COORDS = {
+  "C":{left:50,top:96}, "P":{left:50,top:65.2}, "1B":{left:75.7,top:65.2},
+  "2B":{left:62.9,top:39}, "3B":{left:24.3,top:65.2}, "SS":{left:37.1,top:39},
+  "LF":{left:16,top:19}, "CF":{left:50,top:8}, "RF":{left:84,top:19}
+};
+const NUM_INNINGS = 6;
+const STORAGE_KEY = "party-animals-lineup-v2";
+
+let lineups = {};
+for(let i=1;i<=NUM_INNINGS;i++){
+  lineups[i] = {};
+  POSITIONS.forEach(p => lineups[i][p] = "");
+}
+let currentInning = 1;
+
+function shortName(full){
+  const parts = full.split(" ");
+  return parts[0][0] + ". " + parts[parts.length-1];
+}
+
+function buildTabs(){
+  const el = document.getElementById("inningTabs");
+  el.innerHTML = "";
+  for(let i=1;i<=NUM_INNINGS;i++){
+    const b = document.createElement("button");
+    b.className = "inning-btn" + (i===currentInning ? " active" : "");
+    b.textContent = i;
+    b.addEventListener("click", () => { currentInning = i; renderAll(); });
+    el.appendChild(b);
+  }
+}
+
+function attachSelectListeners(){
+  POSITIONS.forEach(pos => {
+    const select = document.getElementById("select-" + pos);
+    select.addEventListener("change", (e) => {
+      lineups[currentInning][pos] = e.target.value;
+      saveState();
+      renderAll();
+    });
+  });
+}
+
+function renderAll(){
+  buildTabs();
+  const assignment = lineups[currentInning];
+  const takenElsewhere = pos => POSITIONS.filter(p => p !== pos).map(p => assignment[p]).filter(Boolean);
+
+  POSITIONS.forEach(pos => {
+    const select = document.getElementById("select-" + pos);
+    const currentVal = assignment[pos];
+    const taken = takenElsewhere(pos);
+    select.innerHTML = "";
+    const blank = document.createElement("option");
+    blank.value = "";
+    blank.textContent = "Empty";
+    select.appendChild(blank);
+    ROSTER.forEach(name => {
+      if(taken.includes(name)) return;
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = shortName(name);
+      if(name === currentVal) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.value = currentVal || "";
+    select.classList.toggle("empty", !currentVal);
+  });
+
+  renderTally();
+
+  const benchEl = document.getElementById("bench");
+  benchEl.innerHTML = "";
+  const onField = POSITIONS.map(p => assignment[p]).filter(Boolean);
+  const bench = ROSTER.filter(n => !onField.includes(n));
+  if(bench.length === 0){
+    const em = document.createElement("span");
+    em.className = "bench-empty";
+    em.textContent = "Everyone's in the field.";
+    benchEl.appendChild(em);
+  } else {
+    bench.forEach(name => {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = name;
+      benchEl.appendChild(chip);
+    });
+  }
+}
+
+function renderTally(){
+  const counts = {};
+  ROSTER.forEach(name => counts[name] = 0);
+  for(let i=1;i<=NUM_INNINGS;i++){
+    const onField = POSITIONS.map(p => lineups[i][p]).filter(Boolean);
+    ROSTER.forEach(name => {
+      if(!onField.includes(name)) counts[name]++;
+    });
+  }
+  const sorted = [...ROSTER].sort((a,b) => counts[b] - counts[a] || a.localeCompare(b));
+  const tallyEl = document.getElementById("tally");
+  tallyEl.innerHTML = "";
+  sorted.forEach(name => {
+    const row = document.createElement("div");
+    row.className = "tally-row";
+    const nameEl = document.createElement("span");
+    nameEl.className = "tally-name";
+    nameEl.textContent = name;
+    const countEl = document.createElement("span");
+    countEl.className = "tally-count";
+    if(counts[name] === 0) countEl.classList.add("zero");
+    if(counts[name] >= 3) countEl.classList.add("high");
+    countEl.textContent = counts[name];
+    row.appendChild(nameEl);
+    row.appendChild(countEl);
+    tallyEl.appendChild(row);
+  });
+}
+
+function showModal(text, onConfirm){
+  const overlay = document.getElementById("modalOverlay");
+  document.getElementById("modalText").textContent = text;
+  overlay.classList.add("show");
+  const confirmBtn = document.getElementById("modalConfirm");
+  const cancelBtn = document.getElementById("modalCancel");
+  const cleanup = () => {
+    overlay.classList.remove("show");
+    confirmBtn.removeEventListener("click", onConfirmHandler);
+    cancelBtn.removeEventListener("click", onCancelHandler);
+  };
+  const onConfirmHandler = () => { cleanup(); onConfirm(); };
+  const onCancelHandler = () => { cleanup(); };
+  confirmBtn.addEventListener("click", onConfirmHandler);
+  cancelBtn.addEventListener("click", onCancelHandler);
+}
+
+document.getElementById("clearInningBtn").addEventListener("click", () => {
+  showModal("Clear every position for inning " + currentInning + "?", () => {
+    POSITIONS.forEach(p => lineups[currentInning][p] = "");
+    saveState();
+    renderAll();
+  });
+});
+
+document.getElementById("clearAllBtn").addEventListener("click", () => {
+  showModal("Clear all 6 innings? This can't be undone.", () => {
+    for(let i=1;i<=NUM_INNINGS;i++){
+      POSITIONS.forEach(p => lineups[i][p] = "");
+    }
+    saveState();
+    renderAll();
+  });
+});
+
+document.getElementById("copyPrevBtn").addEventListener("click", () => {
+  if(currentInning === 1) return;
+  const prev = lineups[currentInning - 1];
+  lineups[currentInning] = Object.assign({}, prev);
+  saveState();
+  renderAll();
+});
+
+function buildPrintSheets(){
+  const container = document.getElementById("printAllContainer");
+  container.innerHTML = "";
+  const svgMarkup = document.querySelector(".field-wrap svg").outerHTML;
+
+  for(let i=1;i<=NUM_INNINGS;i++){
+    const assignment = lineups[i];
+
+    const sheet = document.createElement("div");
+    sheet.className = "print-sheet";
+
+    const header = document.createElement("div");
+    header.className = "print-header";
+    header.innerHTML = `<p class="print-eyebrow">Party Animals · 9U</p><h2>Inning ${i}</h2>`;
+    sheet.appendChild(header);
+
+    const fieldWrap = document.createElement("div");
+    fieldWrap.className = "print-field-wrap";
+    fieldWrap.innerHTML = svgMarkup;
+
+    POSITIONS.forEach(pos => {
+      const coord = POS_COORDS[pos];
+      const posDiv = document.createElement("div");
+      posDiv.className = "print-pos";
+      posDiv.style.left = coord.left + "%";
+      posDiv.style.top = coord.top + "%";
+      const name = assignment[pos];
+      const nameClass = name ? "print-pos-name" : "print-pos-name print-empty";
+      posDiv.innerHTML = `<span class="print-pos-label">${pos}</span><span class="${nameClass}">${name ? shortName(name) : "—"}</span>`;
+      fieldWrap.appendChild(posDiv);
+    });
+    sheet.appendChild(fieldWrap);
+
+    const onField = POSITIONS.map(p => assignment[p]).filter(Boolean);
+    const bench = ROSTER.filter(n => !onField.includes(n));
+    const benchWrap = document.createElement("div");
+    benchWrap.className = "print-bench-wrap";
+    benchWrap.innerHTML = `<span class="print-bench-label">Bench:</span>${bench.length ? bench.join(", ") : "Everyone's in the field"}`;
+    sheet.appendChild(benchWrap);
+
+    container.appendChild(sheet);
+  }
+}
+
+document.getElementById("printBtn").addEventListener("click", () => {
+  buildPrintSheets();
+  window.print();
+});
+
+const hasClaudeStorage = typeof window.storage !== "undefined" && window.storage !== null;
+
+async function saveState(){
+  const payload = JSON.stringify({lineups, currentInning});
+  if(hasClaudeStorage){
+    try{
+      await window.storage.set(STORAGE_KEY, payload, false);
+      return;
+    }catch(err){
+      console.error("Claude storage save failed:", err);
+    }
+  }
+  try{
+    localStorage.setItem(STORAGE_KEY, payload);
+  }catch(err){
+    console.error("Local storage save failed:", err);
+  }
+}
+
+async function loadState(){
+  let raw = null;
+  if(hasClaudeStorage){
+    try{
+      const result = await window.storage.get(STORAGE_KEY, false);
+      if(result && result.value) raw = result.value;
+    }catch(err){
+      // no saved state yet in Claude storage — fine, try local fallback
+    }
+  }
+  if(!raw){
+    try{
+      raw = localStorage.getItem(STORAGE_KEY);
+    }catch(err){
+      // localStorage unavailable — fine, start fresh
+    }
+  }
+  if(raw){
+    try{
+      const parsed = JSON.parse(raw);
+      if(parsed.lineups) lineups = parsed.lineups;
+      if(parsed.currentInning) currentInning = parsed.currentInning;
+    }catch(err){
+      // corrupted saved data — start fresh
+    }
+  }
+  attachSelectListeners();
+  renderAll();
+}
+
+loadState();
+</script>
+</body>
+</html>
